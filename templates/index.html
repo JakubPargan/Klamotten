@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produkt-Link-Sammlung</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Füge ein Produkt hinzu</h1>
+    <form method="post">
+        <input type="url" name="url" placeholder="Produktlink eingeben" required>
+        <button type="submit">Hinzufügen</button>
+    </form>
+
+    <h2>Gespeicherte Produkte:</h2>
+    <div class="product-list">
+        {% for product in products %}
+        <div class="product">
+            <img src="{{ product.image }}" alt="{{ product.name }}">
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.price }}</p>
+            <a href="{{ product.url }}" target="_blank">Zum Produkt</a>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
