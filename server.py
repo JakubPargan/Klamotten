@@ -1,9 +1,3 @@
-from flask import Flask, request, jsonify
-from bs4 import BeautifulSoup
-import requests
-
-app = Flask(__name__)
-
 @app.route('/extract', methods=['POST'])
 def extract_data():
     data = request.json
@@ -11,6 +5,7 @@ def extract_data():
 
     try:
         response = requests.get(url)
+        response.raise_for_status()  # Überprüfen Sie den HTTP-Statuscode
         soup = BeautifulSoup(response.text, 'html.parser')
         
         # Beispielhafter Extraktionscode:
@@ -24,8 +19,9 @@ def extract_data():
             "image_url": product_image
         })
 
+    except requests.exceptions.RequestException as req_err:
+        return jsonify({"error": f"Anfragefehler: {req_err}"}), 500
+    except AttributeError as attr_err:
+        return jsonify({"error": f"Attributfehler: {attr_err}"}), 500
     except Exception as e:
-        return jsonify({"error": "Fehler bei der Datenextraktion"}), 500
-
-if __name__ == "__main__":
-    app.run(debug=True)
+        return jsonify({"error": f"Fehler bei der Datenextraktion: {e}"}), 500
